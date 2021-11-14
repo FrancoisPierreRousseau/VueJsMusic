@@ -11,7 +11,7 @@ export default createStore({
       state.authModalShow = !state.authModalShow;
     },
     toggleAuth: (state) => {
-      state.userLoggedIn = true;
+      state.userLoggedIn = !state.userLoggedIn;
     },
   },
   getters: {
@@ -52,10 +52,12 @@ export default createStore({
         commit('toggleAuth');
       }
     },
-    async signout({ commit }) {
+    async signout({ commit }, payload) {
       await auth.signOut();
-      console.log('eee');
       commit('toggleAuth');
+      if (payload.route.meta.requiresAuth) {
+        payload.router.push({ name: 'home' });
+      }
     },
   },
 });
